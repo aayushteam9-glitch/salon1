@@ -5,13 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const PaymentScreen = ({ route, navigation }) => {
   const { totalAmount } = route.params || { totalAmount: 899 };
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [confirmation, setConfirmation] = useState(null);
 
   const paymentOptions = [
     { id: "upi", label: "UPI", icon: "logo-google" },
@@ -21,16 +21,23 @@ const PaymentScreen = ({ route, navigation }) => {
   ];
 
   const handlePayment = () => {
-    Alert.alert(
-      "Booking Confirmed 🎉",
-      `Your booking has been confirmed!\n\nPayment Method: ${selectedMethod.toUpperCase()}`,
-      [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate("Dashboard"), // ✅ Go to Dashboard
-        },
-      ]
-    );
+    if (selectedMethod) {
+      setConfirmation({
+        title: "Booking Confirmed 🎉",
+        message: `Your booking has been confirmed!\n\nPayment Method: ${selectedMethod.toUpperCase()}`,
+      });
+
+      // Auto navigate after 3s if not closed
+      setTimeout(() => {
+        setConfirmation(null);
+        navigation.navigate("Dashboard");
+      }, 3000);
+    }
+  };
+
+  const closeConfirmation = () => {
+    setConfirmation(null);
+    navigation.navigate("Dashboard");
   };
 
   return (
@@ -80,7 +87,9 @@ const PaymentScreen = ({ route, navigation }) => {
                 selectedMethod === option.id && styles.radioOuterActive,
               ]}
             >
-              {selectedMethod === option.id && <View style={styles.radioInner} />}
+              {selectedMethod === option.id && (
+                <View style={styles.radioInner} />
+              )}
             </View>
           </TouchableOpacity>
         ))}
@@ -103,6 +112,32 @@ const PaymentScreen = ({ route, navigation }) => {
           <Text style={styles.payNowText}>Pay Now</Text>
         </TouchableOpacity>
       </View>
+
+      {/* ✅ Confirmation Box in Center with Close button */}
+      {confirmation && (
+        <View style={styles.overlay}>
+          <View style={styles.confirmationBox}>
+            {/* Close button */}
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={closeConfirmation}
+            >
+              <Ionicons name="close" size={22} color="#333" />
+            </TouchableOpacity>
+
+            <Ionicons
+              name="checkmark-circle"
+              size={48}
+              color="#28a745"
+              style={{ marginBottom: 10 }}
+            />
+            <Text style={styles.confirmationTitle}>{confirmation.title}</Text>
+            <Text style={styles.confirmationMessage}>
+              {confirmation.message}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -123,10 +158,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eaeaea",
     elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
   },
   backBtn: {
     width: 36,
@@ -164,20 +195,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 12,
     backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 1,
   },
   optionCardSelected: {
     borderColor: "#e91e63",
     backgroundColor: "#fef6f9",
-    shadowColor: "#e91e63",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
   optionLeft: { flexDirection: "row", alignItems: "center", flex: 1 },
   optionIcon: { marginRight: 14 },
@@ -206,10 +227,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eaeaea",
     backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
     elevation: 5,
   },
   priceContainer: { alignItems: "flex-start" },
@@ -220,19 +237,51 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 10,
-    shadowColor: "#e91e63",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  payNowBtnDisabled: {
-    backgroundColor: "#cccccc",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
-  },
+  payNowBtnDisabled: { backgroundColor: "#cccccc" },
   payNowText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+
+  // ✅ Center Overlay
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+  confirmationBox: {
+    width: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  confirmationTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#28a745",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  confirmationMessage: {
+    fontSize: 15,
+    color: "#333",
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  // Close button
+  closeBtn: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    padding: 6,
+  },
 });
