@@ -14,12 +14,49 @@ import { useNavigation } from '@react-navigation/native';
 const categories = ['ALL', 'Hair', 'Makeup', 'Nail art'];
 
 const data = [
-  { id: '1', title: 'Hair transformation', image: require('../assets/4.jpg'), likes: '15k' },
-  { id: '2', title: 'Bridal makeup', image: require('../assets/1.jpg'), likes: '5k' },
-  { id: '3', title: 'Nail transformation', image: require('../assets/2.jpg'), likes: '12k' },
-  { id: '4', title: 'Hair Color Transformation', image: require('../assets/3.jpg'), likes: '13k' },
-  { id: '5', title: 'Manicure', image: require('../assets/manicure.jpg'), likes: '5k' },
-  { id: '6', title: 'Mehendi', image: require('../assets/mehndi.jpg'), likes: '7k' },
+  {
+    id: '1',
+    title: 'Hair transform',
+    thumbnail: require('../assets/4.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '15k',
+  },
+  {
+    id: '2',
+    title: 'Bridal makeup',
+    thumbnail: require('../assets/1.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '5k',
+  },
+  {
+    id: '3',
+    title: 'Nail transformation',
+    thumbnail: require('../assets/2.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '12k',
+  },
+  {
+    id: '4',
+    title: 'Hair Color Transformation',
+    thumbnail: require('../assets/3.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '13k',
+  },
+  {
+    id: '5',
+    title: 'Hair Color Transformation',
+    thumbnail: require('../assets/glow.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '13k',
+  },
+  {
+    id: '6',
+    title: 'Hair Color Transformation',
+    thumbnail: require('../assets/hairspa.jpg'),
+    video: require('../assets/reels.mp4'),
+    likes: '13k',
+  },
+  
 ];
 
 export default function ExploreScreen() {
@@ -41,8 +78,11 @@ export default function ExploreScreen() {
   );
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card}>
-      <Image source={item.image} style={styles.image} />
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate('ReelDetail', { reel: item })}
+    >
+      <Image source={item.thumbnail} style={styles.image} />
       <View style={styles.likeContainer}>
         <Ionicons name="heart" size={14} color="#fff" />
         <Text style={styles.likeText}>{item.likes}</Text>
@@ -90,9 +130,7 @@ export default function ExploreScreen() {
         numColumns={2}
         columnWrapperStyle={styles.row}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={
-          <Text style={styles.thankYou}>Thank You</Text>
-        }
+        ListFooterComponent={<Text style={styles.thankYou}>Thank You</Text>}
         contentContainerStyle={{ paddingBottom: 30 }}
       />
     </View>
