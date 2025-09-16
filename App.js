@@ -20,6 +20,7 @@ import ProductDetailScreen from "./src/screens/ProductDetailScreen";
 import BookAppointmentScreen from "./src/screens/BookAppointmentScreen";
 import BookSummaryScreen from "./src/screens/BookSummaryScreen"; 
 import PaymentScreen from "./src/screens/PaymentScreen"; // ✅ Added Payment Screen
+import ReelDetailScreen from "./src/screens/ReelDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,8 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="Dashboard" component={BottomTabNavigator} />
+        <Stack.Screen name="ReelDetail" component={ReelDetailScreen} />
+
 
         {/* Product Details Screen */}
         <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
